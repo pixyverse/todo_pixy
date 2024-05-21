@@ -1,0 +1,14 @@
+__pycache__
+.venv
+.bin
+*.JUNK
+*.egg-info
+build
+dist
+parser.py
+_version.py
+.vscode
+.trash
+.TODOS
+templates/*.py
+node_modules
