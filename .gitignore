@@ -10,5 +10,5 @@ _version.py
 .vscode
 .trash
 .TODOS
-templates/*.py
+**/templates/*.py
 node_modules
