@@ -15,6 +15,12 @@ def add_todo():
     return "Not a valid todo", 400
 
 
+@app.route("/toggleAll", methods=["POST"])
+def toggle_all():
+    print("Toggle All TODOS")
+    return "Ok", 200
+
+
 @app.route("/")
 def hello_world():
     return index.doc
