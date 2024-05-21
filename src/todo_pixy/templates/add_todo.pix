@@ -2,12 +2,12 @@ from pixyverse.render_html.render import create_element
 
 def add_todo_success_repsonse(todo: str):
     return (        <li>
-                        <div class_name="view">
-                            <input class_name="toggle" type="checkbox"/>
+                        <div class_="view">
+                            <input class_="toggle" type="checkbox"/>
                             <label>{todo}</label>
-                            <button class_name="destroy"></button>
+                            <button class_="destroy"></button>
                         </div>
-                        <input class_name="edit" value="Rule the web"/>
+                        <input class_="edit" value="Rule the web"/>
                     </li>
                     
             )

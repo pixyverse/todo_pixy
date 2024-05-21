@@ -12,44 +12,44 @@ doc=(
 		<script src="https://unpkg.com/htmx.org@1.9.12"></script>
     </head>
     <body>
-        <section class_name="todoapp">
-            <header class_name="header">
+        <section class_="todoapp">
+            <header class_="header">
                 <form  hx_post="/addTODO" hx_swap="afterbegin" hx_target=".todo-list" hx_on__after_request="this.reset()">
                     <h1>"todos"</h1>
-                    <input id="new-todo" name="new-todo" class_name="new-todo" placeholder="What needs to be done?" autofocus />
+                    <input id="new-todo" name="new-todo" class_="new-todo" placeholder="What needs to be done?" autofocus />
                 </form>
             </header>
             
-            <section class_name="main">
-                <input id="toggle-all" class_name="toggle-all" type="checkbox"/>
-                <label for_label="toggle-all">"Mark all as complete"</label>
-                <ul class_name="todo-list">
-                    <li class_name="completed">
-                        <div class_name="view">
-                            <input class_name="toggle" type="checkbox" checked/>
+            <section class_="main">
+                <input id="toggle-all" class_="toggle-all" type="checkbox" hx_post="/toggleAll"/>
+                <label for_="toggle-all">"Mark all as complete"</label>
+                <ul class_="todo-list">
+                    <li class_="completed">
+                        <div class_="view">
+                            <input class_="toggle" type="checkbox" checked/>
                             <label>"Taste JavaScript"</label>
-                            <button class_name="destroy"></button>
+                            <button class_="destroy"></button>
                         </div>
-                        <input class_name="edit" value="Create a TodoMVC template"/>
+                        <input class_="edit" value="Create a TodoMVC template"/>
                     </li>
                     <li>
-                        <div class_name="view">
-                            <input class_name="toggle" type="checkbox"/>
+                        <div class_="view">
+                            <input class_="toggle" type="checkbox"/>
                             <label>"Buy a unicorn"</label>
-                            <button class_name="destroy"></button>
+                            <button class_="destroy"></button>
                         </div>
-                        <input class_name="edit" value="Rule the web"/>
+                        <input class_="edit" value="Rule the web"/>
                     </li>
                 </ul>
             </section>
             
-            <footer class_name="footer">
+            <footer class_="footer">
                 
-                <span class_name="todo-count"><strong>"0"</strong>" item left"</span>
+                <span class_="todo-count"><strong>"0"</strong>" item left"</span>
                 
-                <ul class_name="filters">
+                <ul class_="filters">
                     <li>
-                        <a class_name="selected" href="#/">"All"</a>
+                        <a class_="selected" href="#/">"All"</a>
                     </li>
                     <li>
                         <a href="#/active">"Active"</a>
@@ -59,10 +59,10 @@ doc=(
                     </li>
                 </ul>
                 
-                <button class_name="clear-completed">"Clear completed"</button>
+                <button class_="clear-completed">"Clear completed"</button>
             </footer>
         </section>
-        <footer class_name="info">
+        <footer class_="info">
             <p>"Double-click to edit a todo"</p>
             
             <p>"Created by "<a href="https://pradeeproark.com">"Pradeep Roark"</a></p>
