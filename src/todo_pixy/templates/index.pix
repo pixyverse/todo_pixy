@@ -9,12 +9,15 @@ doc=(
         <link rel="stylesheet" href="node_modules/todomvc-app-css/index.css"/>
         
         <link rel="stylesheet" href="css/app.css"/>
+		<script src="https://unpkg.com/htmx.org@1.9.12"></script>
     </head>
     <body>
         <section class_name="todoapp">
             <header class_name="header">
-                <h1>"todos"</h1>
-                <input class_name="new-todo" placeholder="What needs to be done?" autofocus/>
+                <form  hx_post="/addTODO" hx_swap="afterbegin" hx_target=".todo-list" hx_on__after_request="this.reset()">
+                    <h1>"todos"</h1>
+                    <input id="new-todo" name="new-todo" class_name="new-todo" placeholder="What needs to be done?" autofocus />
+                </form>
             </header>
             
             <section class_name="main">
