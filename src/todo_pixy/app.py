@@ -1,6 +1,6 @@
 from typing import List
 from flask import Flask, request
-from sqlalchemy import select, update
+from sqlalchemy import delete, select, update
 from todo_pixy.model import TODO, TODOSTATUS, Base
 from todo_pixy.templates import index
 from todo_pixy.templates.add_todo import (
@@ -19,6 +19,15 @@ with app.app_context():
     db.create_all()
 
 
+@app.route("/todo/<int:todo_id>", methods=["GET"])
+def get_todo(todo_id: int):
+    stmt = select(TODO).where(TODO.id == todo_id)
+    todo_row = db.session.execute(stmt).one()
+    if todo_row:
+        return index.todo_item("todo_item", {"todo": todo_row.TODO}, [])
+    return "Not found", 404
+
+
 @app.route("/addTODO", methods=["POST"])
 def add_todo():
     input_new_todo = request.form.get("new-todo")
@@ -27,6 +36,24 @@ def add_todo():
         db.session.commit()
         return add_todo_success_repsonse(input_new_todo.strip())
     return "Not a valid todo", 400
+
+
+@app.route("/updateTodo/<int:todo_id>", methods=["POST"])
+def update_todo(todo_id: int):
+    updated_todo = request.form.get("edit-todo")
+    trimmed_update = updated_todo.strip()
+    if updated_todo and trimmed_update:
+        stmt = update(TODO).where(TODO.id == todo_id).values(todo=updated_todo.strip())
+        db.session.execute(stmt)
+        db.session.commit()
+        stmt = select(TODO).where(TODO.id == todo_id)
+        todo_row = db.session.execute(stmt).one()
+        return index.todo_item("todo_item", {"todo": todo_row.TODO}, [])
+    else:
+        stmt = delete(TODO).where(TODO.id == todo_id)
+        db.session.execute(stmt)
+        db.session.commit()
+        return "", 200
 
 
 @app.route("/toggle/<int:todo_id>", methods=["POST"])
