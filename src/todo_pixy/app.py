@@ -29,6 +29,20 @@ def add_todo():
     return "Not a valid todo", 400
 
 
+@app.route("/toggle/<int:todo_id>", methods=["POST"])
+def toggle(todo_id: int):
+    stmt = select(TODO).where(TODO.id == todo_id)
+    todo_row = db.session.execute(stmt).one()
+    if todo_row:
+        if todo_row.TODO.status == TODOSTATUS.completed:
+            todo_row.TODO.status = TODOSTATUS.todo
+        else:
+            todo_row.TODO.status = TODOSTATUS.completed
+        db.session.commit()
+        return index.todo_item("todo_item", {"todo": todo_row.TODO}, [])
+    return "Unable to toggle", 400
+
+
 @app.route("/toggleAll", methods=["POST"])
 def toggle_all():
     print("Toggle All TODOS")

@@ -4,22 +4,26 @@ from pixyverse.render_html.render import create_element
 from todo_pixy.model import TODO, TODOSTATUS
 def toggle_checkbox(tagName, props, children=[]):
     if props['checked']:
-        return <input class_="toggle" type="checkbox" checked/>
+        return <input class_="toggle" type="checkbox" checked hx_post={f"/toggle/{props['todo_id']}"} hx_target={f"#todo-{props['todo_id']}"} hx_swap="outerHTML"/>
     else:
-        return <input class_="toggle" type="checkbox"/>
+        return <input class_="toggle" type="checkbox" hx_post={f"/toggle/{props['todo_id']}"} hx_target={f"#todo-{props['todo_id']}"} hx_swap="outerHTML"/>
+
+def todo_item(tagName, props, children=[]):
+    todo = props['todo']
+    return (<li id={f"todo-{todo.id}"} class_={todo.status.value}>
+                        <div class_="view">
+                            <toggle_checkbox checked={todo.status == TODOSTATUS.completed} todo_id={todo.id}/>
+                            <label>{todo.todo}</label>
+                            <button class_="destroy"></button>
+                        </div>
+                        <input class_="edit" value="Create a TodoMVC template"/>
+                    </li>)
 
 def todo_list(tagName, props, children=[]):
     todos = props['todos']
     return (<ul class_="todo-list">
                 {[
-                        <li class_={todo.status.value}>
-                        <div class_="view">
-                            <toggle_checkbox checked={todo.status == TODOSTATUS.completed}/>
-                            <label>{todo.todo}</label>
-                            <button class_="destroy"></button>
-                        </div>
-                        <input class_="edit" value="Create a TodoMVC template"/>
-                    </li> for todo in todos]}
+                        <todo_item todo={todo}/> for todo in todos]}
             </ul>)
 
 def doc(todos: List[TODO]):
