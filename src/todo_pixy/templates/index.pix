@@ -1,5 +1,29 @@
+from typing import List
 from pixyverse.render_html.render import create_element
-doc=(
+
+from todo_pixy.model import TODO, TODOSTATUS
+def toggle_checkbox(tagName, props, children=[]):
+    if props['checked']:
+        return <input class_="toggle" type="checkbox" checked/>
+    else:
+        return <input class_="toggle" type="checkbox"/>
+
+def todo_list(tagName, props, children=[]):
+    todos = props['todos']
+    return (<ul class_="todo-list">
+                {[
+                        <li class_={todo.status.value}>
+                        <div class_="view">
+                            <toggle_checkbox checked={todo.status == TODOSTATUS.completed}/>
+                            <label>{todo.todo}</label>
+                            <button class_="destroy"></button>
+                        </div>
+                        <input class_="edit" value="Create a TodoMVC template"/>
+                    </li> for todo in todos]}
+            </ul>)
+
+def doc(todos: List[TODO]):
+    return (
     <html lang="en">
     <head>
         <meta charset="utf-8"/>
@@ -21,25 +45,10 @@ doc=(
             </header>
             
             <section class_="main">
-                <input id="toggle-all" class_="toggle-all" type="checkbox" hx_post="/toggleAll"/>
+                <input id="toggle-all" name="toggle-all" class_="toggle-all" type="checkbox" hx_post="/toggleAll" hx_target=".todo-list" hx_swap="outerHTML"/>
                 <label for_="toggle-all">"Mark all as complete"</label>
                 <ul class_="todo-list">
-                    <li class_="completed">
-                        <div class_="view">
-                            <input class_="toggle" type="checkbox" checked/>
-                            <label>"Taste JavaScript"</label>
-                            <button class_="destroy"></button>
-                        </div>
-                        <input class_="edit" value="Create a TodoMVC template"/>
-                    </li>
-                    <li>
-                        <div class_="view">
-                            <input class_="toggle" type="checkbox"/>
-                            <label>"Buy a unicorn"</label>
-                            <button class_="destroy"></button>
-                        </div>
-                        <input class_="edit" value="Rule the web"/>
-                    </li>
+                    <todo_list todos={todos}/>
                 </ul>
             </section>
             
