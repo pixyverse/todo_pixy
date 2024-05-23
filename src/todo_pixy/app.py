@@ -121,6 +121,50 @@ def clear_completed():
     )
 
 
+@app.route("/all")
+def all():
+    return (
+        index.todo_list(
+            "todo_list",
+            {"todos": db.session.scalars(select(TODO)).all()},
+            [],
+        )
+        + get_active_todo_count()
+    )
+
+
+@app.route("/active")
+def active():
+    return (
+        index.todo_list(
+            "todo_list",
+            {
+                "todos": db.session.scalars(
+                    select(TODO).where(TODO.status == TODOSTATUS.todo)
+                ).all()
+            },
+            [],
+        )
+        + get_active_todo_count()
+    )
+
+
+@app.route("/completed")
+def completed():
+    return (
+        index.todo_list(
+            "todo_list",
+            {
+                "todos": db.session.scalars(
+                    select(TODO).where(TODO.status == TODOSTATUS.completed)
+                ).all()
+            },
+            [],
+        )
+        + get_active_todo_count()
+    )
+
+
 @app.route("/")
 def home():
     all_todo_stmt = select(TODO)

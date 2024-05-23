@@ -3,6 +3,21 @@ from pixyverse.render_html.render import create_element
 
 from todo_pixy.model import TODO, TODOSTATUS
 
+def filter_list(tagName, props, children=[]):
+    selection_script = "'on click remove .selected from <a/> in closest <ul/> then add .selected to me'"
+    return (
+            <ul class_="filters" >
+                    <li>
+                        <a hx_get="/all" hx_target=".todo-list" hx_swap="outerHTML" data_script={selection_script}>"All"</a>
+                    </li>
+                    <li>
+                        <a  hx_get="/active" hx_target=".todo-list" hx_swap="outerHTML" data_script={selection_script}>"Active"</a>
+                    </li>
+                    <li>
+                        <a hx_get="/completed" hx_target=".todo-list" hx_swap="outerHTML" data_script={selection_script}>"Completed"</a>
+                    </li>
+            </ul>)
+
 def todo_counter(tagName, props, children=[]):
     count = props['count']
     if 'oob' in props and props['oob']:
@@ -78,17 +93,7 @@ def doc(todos: List[TODO]):
                 
                 <todo_counter count={sum(1 for todo in todos if todo.status == TODOSTATUS.todo)}/>
                 
-                <ul class_="filters">
-                    <li>
-                        <a class_="selected" href="#/">"All"</a>
-                    </li>
-                    <li>
-                        <a href="#/active">"Active"</a>
-                    </li>
-                    <li>
-                        <a href="#/completed">"Completed"</a>
-                    </li>
-                </ul>
+                <filter_list/>
                 
                 <button class_="clear-completed" hx_post="/clearCompleted" hx_target=".todo-list" hx_swap="outerHTML">"Clear completed"</button>
             </footer>
