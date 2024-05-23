@@ -15,7 +15,11 @@ def todo_item(tagName, props, children=[]):
                         <div class_="view">
                             <toggle_checkbox checked={todo.status == TODOSTATUS.completed} todo_id={todo.id}/>
                             <label data_script={dblclick_script}>{todo.todo}</label>
-                            <button class_="destroy"></button>
+                            <button class_="destroy"
+                                hx_delete={f"'/todo/{todo.id}'"}
+                                hx_target={f"'#todo-{todo.id}'"}
+                                hx_swap="outerHTML">
+                            </button>
                         </div>
                         <input name="edit-todo" class_="edit" value={todo.todo}
                             hx_trigger="keyup[keyCode==13], blur" 

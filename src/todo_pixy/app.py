@@ -53,6 +53,14 @@ def update_todo(todo_id: int):
         return "", 200
 
 
+@app.route("/todo/<int:todo_id>", methods=["DELETE"])
+def delete_todo(todo_id: int):
+    stmt = delete(TODO).where(TODO.id == todo_id)
+    db.session.execute(stmt)
+    db.session.commit()
+    return "", 200
+
+
 @app.route("/toggle/<int:todo_id>", methods=["POST"])
 def toggle(todo_id: int):
     stmt = select(TODO).where(TODO.id == todo_id)
