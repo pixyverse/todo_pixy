@@ -90,7 +90,7 @@ def doc(todos: List[TODO]):
                     </li>
                 </ul>
                 
-                <button class_="clear-completed">"Clear completed"</button>
+                <button class_="clear-completed" hx_post="/clearCompleted" hx_target=".todo-list" hx_swap="outerHTML">"Clear completed"</button>
             </footer>
         </section>
         <footer class_="info">

@@ -101,7 +101,22 @@ def toggle_all():
         db.session.execute(stmt)
     db.session.commit()
     return (
-        index.todo_list("todo_list", {"todos": db.session.scalars(select(TODO))}, [])
+        index.todo_list(
+            "todo_list", {"todos": db.session.scalars(select(TODO)).all()}, []
+        )
+        + get_active_todo_count()
+    )
+
+
+@app.route("/clearCompleted", methods=["POST"])
+def clear_completed():
+    stmt = delete(TODO).where(TODO.status == TODOSTATUS.completed)
+    db.session.execute(stmt)
+    db.session.commit()
+    return (
+        index.todo_list(
+            "todo_list", {"todos": db.session.scalars(select(TODO)).all()}, []
+        )
         + get_active_todo_count()
     )
 
