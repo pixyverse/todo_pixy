@@ -1,5 +1,5 @@
 from flask import Flask, request
-from sqlalchemy import delete, select, update
+from sqlalchemy import delete, func, select, update
 from todo_pixy.model import TODO, TODOSTATUS, Base
 from todo_pixy.templates import index
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +13,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///todos.db"
 db.init_app(app)
 with app.app_context():
     db.create_all()
+
+
+def get_active_todo_count():
+    stmt = (
+        select(func.count("*")).select_from(TODO).where(TODO.status == TODOSTATUS.todo)
+    )
+    result = db.session.scalars(stmt).one()
+    return index.todo_counter("todo_counter", {"count": result, "oob": True})
 
 
 @app.route("/todo/<int:todo_id>", methods=["GET"])
@@ -31,7 +39,10 @@ def add_todo():
         new_todo = TODO(todo=input_new_todo.strip(), status=TODOSTATUS.todo)
         db.session.add(new_todo)
         db.session.commit()
-        return index.todo_item("todo_item", {"todo": new_todo}, [])
+        return (
+            index.todo_item("todo_item", {"todo": new_todo}, [])
+            + get_active_todo_count()
+        )
     return "Not a valid todo", 400
 
 
@@ -50,7 +61,7 @@ def update_todo(todo_id: int):
         stmt = delete(TODO).where(TODO.id == todo_id)
         db.session.execute(stmt)
         db.session.commit()
-        return "", 200
+        return get_active_todo_count(), 200
 
 
 @app.route("/todo/<int:todo_id>", methods=["DELETE"])
@@ -58,7 +69,7 @@ def delete_todo(todo_id: int):
     stmt = delete(TODO).where(TODO.id == todo_id)
     db.session.execute(stmt)
     db.session.commit()
-    return "", 200
+    return get_active_todo_count(), 200
 
 
 @app.route("/toggle/<int:todo_id>", methods=["POST"])
@@ -71,7 +82,10 @@ def toggle(todo_id: int):
         else:
             todo_row.TODO.status = TODOSTATUS.completed
         db.session.commit()
-        return index.todo_item("todo_item", {"todo": todo_row.TODO}, [])
+        return (
+            index.todo_item("todo_item", {"todo": todo_row.TODO}, [])
+            + get_active_todo_count()
+        )
     return "Unable to toggle", 400
 
 
@@ -86,10 +100,13 @@ def toggle_all():
         stmt = update(TODO).values(status=TODOSTATUS.todo)
         db.session.execute(stmt)
     db.session.commit()
-    return index.todo_list("todo_list", {"todos": db.session.scalars(select(TODO))}, [])
+    return (
+        index.todo_list("todo_list", {"todos": db.session.scalars(select(TODO))}, [])
+        + get_active_todo_count()
+    )
 
 
 @app.route("/")
 def home():
     all_todo_stmt = select(TODO)
-    return index.doc(db.session.scalars(all_todo_stmt))
+    return index.doc(db.session.scalars(all_todo_stmt).all()) + get_active_todo_count()

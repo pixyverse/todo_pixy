@@ -2,6 +2,14 @@ from typing import List
 from pixyverse.render_html.render import create_element
 
 from todo_pixy.model import TODO, TODOSTATUS
+
+def todo_counter(tagName, props, children=[]):
+    count = props['count']
+    if 'oob' in props and props['oob']:
+        return (<span hx_swap_oob="outerHTML: .todo-count" class_="todo-count"><strong>{str(count)}</strong>{" item left" if count == 1 else " items left"}</span>)
+    else:
+        return (<span class_="todo-count"><strong>{str(count)}</strong>{" item left" if count == 1 else " items left"}</span>)
+
 def toggle_checkbox(tagName, props, children=[]):
     if props['checked']:
         return <input class_="toggle" type="checkbox" checked hx_post={f"/toggle/{props['todo_id']}"} hx_target={f"#todo-{props['todo_id']}"} hx_swap="outerHTML"/>
@@ -68,7 +76,7 @@ def doc(todos: List[TODO]):
             
             <footer class_="footer">
                 
-                <span class_="todo-count"><strong>"0"</strong>" item left"</span>
+                <todo_counter count={sum(1 for todo in todos if todo.status == TODOSTATUS.todo)}/>
                 
                 <ul class_="filters">
                     <li>
