@@ -1,11 +1,7 @@
-from typing import List
 from flask import Flask, request
 from sqlalchemy import delete, select, update
 from todo_pixy.model import TODO, TODOSTATUS, Base
 from todo_pixy.templates import index
-from todo_pixy.templates.add_todo import (
-    add_todo_success_repsonse,
-)
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(model_class=Base)
@@ -32,9 +28,10 @@ def get_todo(todo_id: int):
 def add_todo():
     input_new_todo = request.form.get("new-todo")
     if input_new_todo and input_new_todo.strip() != "":
-        db.session.add(TODO(todo=input_new_todo.strip(), status=TODOSTATUS.todo))
+        new_todo = TODO(todo=input_new_todo.strip(), status=TODOSTATUS.todo)
+        db.session.add(new_todo)
         db.session.commit()
-        return add_todo_success_repsonse(input_new_todo.strip())
+        return index.todo_item("todo_item", {"todo": new_todo}, [])
     return "Not a valid todo", 400
 
 
