@@ -1,5 +1,6 @@
 from typing import List
 from pixyverse.render_html.render import create_element
+from markupsafe import Markup, escape
 
 from todo_pixy.model import TODO, TODOSTATUS
 
@@ -37,14 +38,14 @@ def todo_item(tagName, props, children=[]):
     return (<li id={f"'todo-{todo.id}'"} class_={f"'{todo.status.value}'"} hx_trigger="keyup[keyCode==27]" hx_get={f"'/todo/{todo.id}'"} hx_swap="outerHTML">
                         <div class_="view">
                             <toggle_checkbox checked={todo.status == TODOSTATUS.completed} todo_id={todo.id}/>
-                            <label data_script={dblclick_script}>{todo.todo}</label>
+                            <label data_script={dblclick_script}>{escape(todo.todo)}</label>
                             <button class_="destroy"
                                 hx_delete={f"'/todo/{todo.id}'"}
                                 hx_target={f"'#todo-{todo.id}'"}
                                 hx_swap="outerHTML">
                             </button>
                         </div>
-                        <input name="edit-todo" class_="edit" value={todo.todo}
+                        <input name="edit-todo" class_="edit" value={escape(todo.todo)}
                             hx_trigger="keyup[keyCode==13], blur" 
                             hx_post={f"'/updateTodo/{todo.id}'"} 
                             hx_target={f"'#todo-{todo.id}'"}
