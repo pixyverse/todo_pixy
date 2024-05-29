@@ -10,8 +10,8 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.12"
 flask = "^3.0.3"
-pixyverse-render-html = {path = "../render_html"}
 flask-sqlalchemy = "^3.1.1"
+pixyverse-render-html = "^0.1.2"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -15,16 +15,24 @@ Minimal client side scripting is handled using the excellent [hyperscript](http:
 
 ## Optional
 
-[fswatch](https://emcrisostomo.github.io/fswatch/) to automatically transpile (.pix) files on change to python modules
+[fswatch](https://emcrisostomo.github.io/fswatch/) to monitor file changes and invoke pixy to transpile (.pix) files on change to python modules
 
 # Install and Run
 
 1. Git checkout the project
 2. ```poetry install```
-3. ```cd src/todo_pixy```
-4. ```flask run --debug```
-5. In another terminal session run the pixy transpiler on all .pix files, you can use the handy proc.sh script.
+3. ```cd src/todo_pixy/static && npm install```
+4. ```cd src/todo_pixy```
+6. ```poetry shell```
+7. ```flask run --debug```
+8. In another terminal session run the pixy transpiler on all .pix files, you can use the handy proc.sh script.
 
     ```
     fswatch src/todo_pixy/templates/**/*.pix | ./proc.sh
+    touch src/todo_pixy/templates/index.pix #in another terminal once to trigger a transpile
     ```
+
+
+# NOTE
+
+Neither Pixy or render-HTML focus on escaping possibly unsafe HTML inputs against XSS attacks. This is done with [MarkupSafe](https://pypi.org/project/MarkupSafe/) library in this application where needed. In this instance the content of todo is escaped using ```escape(todo.todo)```.

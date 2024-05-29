@@ -168,4 +168,4 @@ def completed():
 @app.route("/")
 def home():
     all_todo_stmt = select(TODO)
-    return index.doc(db.session.scalars(all_todo_stmt).all()) + get_active_todo_count()
+    return "<!DOCTYPE html>" + index.doc(db.session.scalars(all_todo_stmt).all()) + get_active_todo_count()
