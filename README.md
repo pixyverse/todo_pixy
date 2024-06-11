@@ -1,5 +1,5 @@
 # TODO-PIXY
-This is an implementation of the infamous todomvc app which has a detailed spec here. While todomvc focuses on client-side scripting to implement all features, todo-pixy focuses on implementing [HATEOAS](https://htmx.org/essays/hateoas/) principles with python using [pixy](https://github.com/pixyverse/pixy) for components.
+This is an implementation of the infamous [todomvc app](https://todomvc.com) which has a detailed spec [here](https://github.com/tastejs/todomvc/blob/master/app-spec.md). While todomvc focuses on client-side scripting to implement all features, todo-pixy focuses on implementing [HATEOAS](https://htmx.org/essays/hateoas/) principles with python using [pixy](https://github.com/pixyverse/pixy) for components.
 
 Minimal client side scripting is handled using the excellent [hyperscript](http://hyperscript.org) package.
 # Requirements
